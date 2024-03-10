@@ -2,7 +2,21 @@ body {
   background-color: #daf6ff;
 }
 
+.div-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
 .slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.input-field {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,4 +53,16 @@ body {
   align-items: center;
   height: 100px;
   gap: 20px;
+}
+
+#color-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+  grid-gap: 0; /* No gap between grid items */
+}
+
+.child {
+  width: 80px; /* Adjust size as needed */
+  height: 80px; /* Adjust size as needed */
+  background-color: gray; /* Default background color */
 }

@@ -2,6 +2,8 @@ const hueSlider = document.getElementById("hueSlider");
 const saturationSlider = document.getElementById("saturationSlider");
 const lightnessSlider = document.getElementById("lightnessSlider");
 const primaryField = document.getElementById("primary-color");
+const squareContainer = document.getElementById("color-container");
+const squares = squareContainer.querySelector(".child");
 
 function hslToHex(h, s, l) {
   l /= 100;
@@ -29,6 +31,7 @@ function updateColor() {
   lightnessSlider.style.background = `linear-gradient(to right, hsl(${hue}, ${saturation}%, 0%), hsl(${hue}, ${saturation}%, 50%), hsl(${hue}, ${saturation}%, 100%))`;
 
   primaryField.value = hslToHex(hue, saturation, lightness);
+  squareContainer.children[0].style.backgroundColor = color;
 }
 
 hueSlider.addEventListener("input", updateColor);

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <div>
+    <div class="div-container">
       <div class="body-row">
         <div class="slider-container">
           <input
@@ -35,8 +35,12 @@
             id="lightnessSlider"
           />
         </div>
-        <div class="text-field">
-          <input type="text" placeholder="Color" id="primary-color" />
+        <div class="input-field">
+          <label>Select Your Color</label>
+          <div class="color-row">
+            <input type="text" placeholder="Color" id="primary-color" />
+            <button>Copy</button>
+          </div>
           <select id="color-type">
             <option value="complementary">Complementary</option>
             <option value="split-complementary">Split-Complementary</option>
@@ -45,6 +49,28 @@
             <option value="tetradic">Tetradic</option>
             <option value="monochromatic">Monochromatic</option>
           </select>
+        </div>
+      </div>
+      <div class="body-row">
+        <div id="color-container">
+          <div class="child" id="child1"></div>
+          <div class="child" id="child2"></div>
+          <div class="child" id="child3"></div>
+          <div class="child" id="child4"></div>
+        </div>
+        <div class="input-field">
+          <div class="color-row">
+            <input type="text" placeholder="Color" id="secondary-color-1" />
+            <button>Copy</button>
+          </div>
+          <div class="color-row">
+            <input type="text" placeholder="Color" id="secondary-color-2" />
+            <button>Copy</button>
+          </div>
+          <div class="color-row">
+            <input type="text" placeholder="Color" id="secondary-color-3" />
+            <button>Copy</button>
+          </div>
         </div>
       </div>
     </div>
