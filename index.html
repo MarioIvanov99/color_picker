@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color Slider</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div>
+      <div class="body-row">
+        <div class="slider-container">
+          <input
+            type="range"
+            min="0"
+            max="360"
+            value="0"
+            class="slider"
+            id="hueSlider"
+          />
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="100"
+            class="slider"
+            id="saturationSlider"
+          />
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="50"
+            class="slider"
+            id="lightnessSlider"
+          />
+        </div>
+        <div class="text-field">
+          <input type="text" placeholder="Color" id="primary-color" />
+          <select id="color-type">
+            <option value="complementary">Complementary</option>
+            <option value="split-complementary">Split-Complementary</option>
+            <option value="analogous">Analogous</option>
+            <option value="triadic">Triadic</option>
+            <option value="tetradic">Tetradic</option>
+            <option value="monochromatic">Monochromatic</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>

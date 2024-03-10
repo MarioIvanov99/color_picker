@@ -1,0 +1,42 @@
+body {
+  background-color: #daf6ff;
+}
+
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 200px;
+  height: 20px;
+  border-radius: 10px;
+  background: linear-gradient(
+    to right,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.body-row {
+  display: flex;
+  align-items: center;
+  height: 100px;
+  gap: 20px;
+}
