@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Color Slider</title>
     <link rel="stylesheet" href="index.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div class="div-container">
@@ -38,7 +44,12 @@
         <div class="input-field">
           <label>Select Your Color</label>
           <div class="color-row">
-            <input type="text" placeholder="Color" id="primary-color" />
+            <input
+              class="color-field"
+              type="text"
+              placeholder="Color"
+              id="primary-color"
+            />
             <button class="copy-button" title="Copy Color">
               <img src="clipboard-copy.svg" alt="Copy Image" />
             </button>
@@ -53,7 +64,7 @@
           </select>
         </div>
       </div>
-      <div class="body-row">
+      <div class="body-row" id="color-display">
         <div id="color-container">
           <div class="child" id="child1"></div>
           <div class="child" id="child2"></div>
@@ -63,6 +74,7 @@
         <div class="input-field secondary-colors">
           <div class="color-row" id="secondary-color-1">
             <input
+              class="color-field"
               type="text"
               placeholder="Color"
               id="secondary-color-code-1"
@@ -74,6 +86,7 @@
           </div>
           <div class="color-row" id="secondary-color-2">
             <input
+              class="color-field"
               type="text"
               placeholder="Color"
               id="secondary-color-code-2"
@@ -85,6 +98,7 @@
           </div>
           <div class="color-row" id="secondary-color-3">
             <input
+              class="color-field"
               type="text"
               placeholder="Color"
               id="secondary-color-code-3"

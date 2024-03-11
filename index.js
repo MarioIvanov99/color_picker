@@ -21,6 +21,10 @@ function hslToHex(h, s, l) {
 }
 
 function updateColor(color) {
+  if (primaryColorInput.style.borderColor === "red") {
+    primaryColorInput.style.borderColor = "";
+  }
+
   squareContainer.children[0].style.backgroundColor = color;
 
   switch (selectedValue) {
