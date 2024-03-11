@@ -4,6 +4,8 @@ const lightnessSlider = document.getElementById("lightnessSlider");
 const primaryField = document.getElementById("primary-color");
 const squareContainer = document.getElementById("color-container");
 const primaryColorInput = document.getElementById("primary-color");
+const copyButtons = document.querySelectorAll(".copy-button");
+let selectedValue = document.getElementById("color-type").value;
 
 function hslToHex(h, s, l) {
   l /= 100;
@@ -20,7 +22,38 @@ function hslToHex(h, s, l) {
 
 function updateColor(color) {
   squareContainer.children[0].style.backgroundColor = color;
+
+  switch (selectedValue) {
+    case "complementary":
+      updateComplementary(color);
+      break;
+    case "split-complementary":
+      break;
+    case "analogous":
+      break;
+    case "triadic":
+      break;
+    case "tetradic":
+      break;
+    case "monochromatic":
+      break;
+  }
+}
+
+function updateComplementary(color) {
+  let { h, s, l } = hexToHSL(color);
+
+  h = h + 180;
+  if (h > 360) {
+    h = h - 360;
+  }
+
+  updatedColor = hslToHex(h, s, l);
+
+  squareContainer.children[1].style.backgroundColor = updatedColor;
+  squareContainer.children[2].style.backgroundColor = updatedColor;
   squareContainer.children[3].style.backgroundColor = color;
+  document.getElementById("secondary-color-code-1").value = updatedColor;
 }
 
 function updateSliderValues() {
@@ -49,7 +82,7 @@ updateSliderValues();
 
 // Define the event listener function
 function handleColorTypeChange() {
-  var selectedValue = this.value;
+  selectedValue = this.value;
   if (selectedValue === "complementary") {
     document.getElementById("secondary-color-2").style.visibility = "hidden";
     document.getElementById("secondary-color-3").style.visibility = "hidden";
@@ -62,6 +95,8 @@ function handleColorTypeChange() {
     document.getElementById("secondary-color-2").style.visibility = "visible";
     document.getElementById("secondary-color-3").style.visibility = "visible";
   }
+
+  updateColor(primaryColorInput.value);
 }
 
 // Add event listener to the color-type select element
@@ -120,6 +155,8 @@ function setSliderValues(color) {
   hueSlider.value = hslColor.h;
   saturationSlider.value = hslColor.s;
   lightnessSlider.value = hslColor.l;
+
+  updateSliderValues();
 }
 
 // Function to check if a string is a valid hex color code
@@ -144,3 +181,23 @@ function validatePrimaryColor() {
 document
   .getElementById("primary-color")
   .addEventListener("input", validatePrimaryColor);
+
+// Iterate over each copy button
+copyButtons.forEach(function (button) {
+  // Add click event listener to each copy button
+  button.addEventListener("click", function () {
+    // Find the input field associated with this button
+    var inputId = this.parentElement.querySelector("input").id;
+    var inputElement = document.getElementById(inputId);
+
+    // Select the text in the input field
+    inputElement.select();
+    inputElement.setSelectionRange(0, 99999); // For mobile devices
+
+    // Copy the selected text to the clipboard
+    document.execCommand("copy");
+
+    // Deselect the text (optional)
+    inputElement.blur();
+  });
+});
