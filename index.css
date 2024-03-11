@@ -39,9 +39,6 @@ body {
     violet
   );
   outline: none;
-  opacity: 0.7;
-  -webkit-transition: 0.2s;
-  transition: opacity 0.2s;
 }
 
 .slider:hover {
@@ -80,4 +77,8 @@ body {
 .copy-button img {
   width: 100%; /* Make the image width fill the button */
   height: 100%; /* Make the image height fill the button */
+}
+
+#primary-color:focus {
+  outline: none; /* Remove the default outline */
 }

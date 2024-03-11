@@ -3,7 +3,7 @@ const saturationSlider = document.getElementById("saturationSlider");
 const lightnessSlider = document.getElementById("lightnessSlider");
 const primaryField = document.getElementById("primary-color");
 const squareContainer = document.getElementById("color-container");
-const squares = squareContainer.querySelector(".child");
+const primaryColorInput = document.getElementById("primary-color");
 
 function hslToHex(h, s, l) {
   l /= 100;
@@ -18,7 +18,12 @@ function hslToHex(h, s, l) {
   return `#${f(0)}${f(8)}${f(4)}`;
 }
 
-function updateColor() {
+function updateColor(color) {
+  squareContainer.children[0].style.backgroundColor = color;
+  squareContainer.children[3].style.backgroundColor = color;
+}
+
+function updateSliderValues() {
   const hue = hueSlider.value;
   const saturation = saturationSlider.value;
   const lightness = lightnessSlider.value;
@@ -31,16 +36,16 @@ function updateColor() {
   lightnessSlider.style.background = `linear-gradient(to right, hsl(${hue}, ${saturation}%, 0%), hsl(${hue}, ${saturation}%, 50%), hsl(${hue}, ${saturation}%, 100%))`;
 
   primaryField.value = hslToHex(hue, saturation, lightness);
-  squareContainer.children[0].style.backgroundColor = color;
-  squareContainer.children[3].style.backgroundColor = color;
+
+  updateColor(color);
 }
 
-hueSlider.addEventListener("input", updateColor);
-saturationSlider.addEventListener("input", updateColor);
-lightnessSlider.addEventListener("input", updateColor);
+hueSlider.addEventListener("input", updateSliderValues);
+saturationSlider.addEventListener("input", updateSliderValues);
+lightnessSlider.addEventListener("input", updateSliderValues);
 
 // Initial color update
-updateColor();
+updateSliderValues();
 
 // Define the event listener function
 function handleColorTypeChange() {
@@ -66,3 +71,76 @@ document
 
 // Manually trigger the event handler when the program runs initially
 handleColorTypeChange.call(document.getElementById("color-type"));
+
+function hexToHSL(hex) {
+  // Remove the leading "#" if present
+  hex = hex.replace(/^#/, "");
+
+  // Convert hex to RGB
+  var r = parseInt(hex.substring(0, 2), 16) / 255;
+  var g = parseInt(hex.substring(2, 4), 16) / 255;
+  var b = parseInt(hex.substring(4, 6), 16) / 255;
+
+  // Find min and max values of RGB
+  var max = Math.max(r, g, b);
+  var min = Math.min(r, g, b);
+
+  // Calculate lightness
+  var lightness = ((max + min) / 2) * 100;
+
+  // If min and max are equal, the color is grayscale and saturation is 0
+  if (max === min) {
+    return { h: 0, s: 0, l: lightness };
+  }
+
+  // Calculate saturation
+  var d = max - min;
+  var saturation =
+    lightness > 50 ? (d / (2 - max - min)) * 100 : (d / (max + min)) * 100;
+
+  // Calculate hue
+  var hue;
+  switch (max) {
+    case r:
+      hue = (((g - b) / d + (g < b ? 6 : 0)) / 6) * 360;
+      break;
+    case g:
+      hue = (((b - r) / d + 2) / 6) * 360;
+      break;
+    case b:
+      hue = (((r - g) / d + 4) / 6) * 360;
+      break;
+  }
+
+  return { h: hue, s: saturation, l: lightness };
+}
+
+function setSliderValues(color) {
+  const hslColor = hexToHSL(color);
+  hueSlider.value = hslColor.h;
+  saturationSlider.value = hslColor.s;
+  lightnessSlider.value = hslColor.l;
+}
+
+// Function to check if a string is a valid hex color code
+function isValidHexColor(color) {
+  return /^#[0-9A-F]{6}$/i.test(color);
+}
+
+// Function to add red border to the input field if the value is not a valid hex color code
+function validatePrimaryColor() {
+  var primaryColorValue = primaryColorInput.value;
+
+  if (!isValidHexColor(primaryColorValue)) {
+    primaryColorInput.style.borderColor = "red";
+  } else {
+    primaryColorInput.style.borderColor = ""; // Reset border color if valid
+    updateColor(primaryColorInput.value);
+    setSliderValues(primaryColorInput.value);
+  }
+}
+
+// Add event listener to validate primary color input on input change
+document
+  .getElementById("primary-color")
+  .addEventListener("input", validatePrimaryColor);
