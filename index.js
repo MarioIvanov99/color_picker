@@ -28,14 +28,19 @@ function updateColor(color) {
       updateComplementary(color);
       break;
     case "split-complementary":
+      updateSplitComplementary(color);
       break;
     case "analogous":
+      updateAnalogous(color);
       break;
     case "triadic":
+      updateTriadic(color);
       break;
     case "tetradic":
+      updateTetradic(color);
       break;
     case "monochromatic":
+      updateMonochromatic(color);
       break;
   }
 }
@@ -54,6 +59,86 @@ function updateComplementary(color) {
   squareContainer.children[2].style.backgroundColor = updatedColor;
   squareContainer.children[3].style.backgroundColor = color;
   document.getElementById("secondary-color-code-1").value = updatedColor;
+}
+
+function updateSplitComplementary(color) {
+  let { h, s, l } = hexToHSL(color);
+
+  h = h + 180;
+  if (h > 360) {
+    h = h - 360;
+  }
+
+  updatedColor1 = hslToHex(h + 30, s, l);
+  updatedColor2 = hslToHex(h - 30, s, l);
+
+  squareContainer.children[1].style.backgroundColor = updatedColor1;
+  squareContainer.children[2].style.backgroundColor = updatedColor2;
+  squareContainer.children[3].style.backgroundColor = color;
+  document.getElementById("secondary-color-code-1").value = updatedColor1;
+  document.getElementById("secondary-color-code-2").value = updatedColor2;
+}
+
+function updateAnalogous(color) {
+  let { h, s, l } = hexToHSL(color);
+
+  updatedColor1 = hslToHex(h + 45, s, l);
+  updatedColor2 = hslToHex(h - 45, s, l);
+
+  squareContainer.children[1].style.backgroundColor = updatedColor1;
+  squareContainer.children[2].style.backgroundColor = updatedColor2;
+  squareContainer.children[3].style.backgroundColor = color;
+  document.getElementById("secondary-color-code-1").value = updatedColor1;
+  document.getElementById("secondary-color-code-2").value = updatedColor2;
+}
+
+function updateTriadic(color) {
+  let { h, s, l } = hexToHSL(color);
+
+  updatedColor1 = hslToHex(h + 120, s, l);
+  updatedColor2 = hslToHex(h + 240, s, l);
+
+  squareContainer.children[1].style.backgroundColor = updatedColor1;
+  squareContainer.children[2].style.backgroundColor = updatedColor2;
+  squareContainer.children[3].style.backgroundColor = color;
+  document.getElementById("secondary-color-code-1").value = updatedColor1;
+  document.getElementById("secondary-color-code-2").value = updatedColor2;
+}
+
+function updateTetradic(color) {
+  let { h, s, l } = hexToHSL(color);
+
+  let h2 = h + 180;
+  if (h2 > 360) {
+    h2 = h2 - 360;
+  }
+
+  updatedColor1 = hslToHex(h + 90 > 360 ? h + 90 - 360 : h + 90, s, l);
+  updatedColor2 = hslToHex(h2 + 90 > 360 ? h2 + 90 - 360 : h2 + 90, s, l);
+  updatedColor3 = hslToHex(h2, s, l);
+
+  squareContainer.children[1].style.backgroundColor = updatedColor1;
+  squareContainer.children[2].style.backgroundColor = updatedColor2;
+  squareContainer.children[3].style.backgroundColor = updatedColor3;
+  document.getElementById("secondary-color-code-1").value = updatedColor1;
+  document.getElementById("secondary-color-code-2").value = updatedColor2;
+  document.getElementById("secondary-color-code-3").value = updatedColor3;
+}
+
+function updateMonochromatic(color) {
+  let { h, s, l } = hexToHSL(color);
+  let sign = 1;
+
+  updatedColor1 = hslToHex(h, s, l + 10 > 100 ? l - 10 : l + 10);
+  updatedColor2 = hslToHex(h, s, l + 20 > 100 ? l - 20 : l + 20);
+  updatedColor3 = hslToHex(h, s, l + 30 > 100 ? l - 30 : l + 30);
+
+  squareContainer.children[1].style.backgroundColor = updatedColor1;
+  squareContainer.children[2].style.backgroundColor = updatedColor2;
+  squareContainer.children[3].style.backgroundColor = updatedColor3;
+  document.getElementById("secondary-color-code-1").value = updatedColor1;
+  document.getElementById("secondary-color-code-2").value = updatedColor2;
+  document.getElementById("secondary-color-code-3").value = updatedColor3;
 }
 
 function updateSliderValues() {
@@ -195,9 +280,9 @@ copyButtons.forEach(function (button) {
     inputElement.setSelectionRange(0, 99999); // For mobile devices
 
     // Copy the selected text to the clipboard
-    document.execCommand("copy");
+    navigator.clipboard.writeText(inputElement.value);
 
-    // Deselect the text (optional)
-    inputElement.blur();
+    // Remove the selection
+    window.getSelection().removeAllRanges();
   });
 });
