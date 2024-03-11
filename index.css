@@ -6,7 +6,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 50px;
 }
 
 .slider-container {
@@ -19,7 +19,7 @@ body {
 .input-field {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
 }
 
@@ -65,4 +65,19 @@ body {
   width: 80px; /* Adjust size as needed */
   height: 80px; /* Adjust size as needed */
   background-color: gray; /* Default background color */
+}
+
+.color-row {
+  display: flex;
+  align-items: center; /* Align items vertically */
+}
+
+.copy-button {
+  height: 20px;
+  padding: 0;
+}
+
+.copy-button img {
+  width: 100%; /* Make the image width fill the button */
+  height: 100%; /* Make the image height fill the button */
 }

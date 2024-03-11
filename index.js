@@ -32,6 +32,7 @@ function updateColor() {
 
   primaryField.value = hslToHex(hue, saturation, lightness);
   squareContainer.children[0].style.backgroundColor = color;
+  squareContainer.children[3].style.backgroundColor = color;
 }
 
 hueSlider.addEventListener("input", updateColor);
@@ -40,3 +41,28 @@ lightnessSlider.addEventListener("input", updateColor);
 
 // Initial color update
 updateColor();
+
+// Define the event listener function
+function handleColorTypeChange() {
+  var selectedValue = this.value;
+  if (selectedValue === "complementary") {
+    document.getElementById("secondary-color-2").style.visibility = "hidden";
+    document.getElementById("secondary-color-3").style.visibility = "hidden";
+  } else if (
+    ["split-complementary", "analogous", "triadic"].includes(selectedValue)
+  ) {
+    document.getElementById("secondary-color-2").style.visibility = "visible";
+    document.getElementById("secondary-color-3").style.visibility = "hidden";
+  } else {
+    document.getElementById("secondary-color-2").style.visibility = "visible";
+    document.getElementById("secondary-color-3").style.visibility = "visible";
+  }
+}
+
+// Add event listener to the color-type select element
+document
+  .getElementById("color-type")
+  .addEventListener("change", handleColorTypeChange);
+
+// Manually trigger the event handler when the program runs initially
+handleColorTypeChange.call(document.getElementById("color-type"));
