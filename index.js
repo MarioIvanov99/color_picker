@@ -27,6 +27,7 @@ function retrieveFromLocalStorage() {
   // Retrieve the value associated with the key "primaryColor"
   const primaryColor = localStorage.getItem("primary");
   const selectedColor = localStorage.getItem("type");
+  const theme = localStorage.getItem("theme");
 
   // Check if the value exists
   if (primaryColor !== null) {
@@ -42,6 +43,19 @@ function retrieveFromLocalStorage() {
     handleColorTypeChange.call(document.getElementById("color-type"));
   } else {
     updateSliderValues();
+  }
+
+  let currentStyle = document.getElementById("stylesheet");
+  let currentButtonText = document.getElementById("theme-button");
+
+  if (theme !== null) {
+    if (theme === "light") {
+      currentStyle.setAttribute("href", "styles/default.css");
+      currentButtonText.textContent = "Dark Theme";
+    } else {
+      currentStyle.setAttribute("href", "styles/dark.css");
+      currentButtonText.textContent = "Light Theme";
+    }
   }
 }
 
@@ -319,4 +333,23 @@ copyButtons.forEach(function (button) {
     // Remove the selection
     window.getSelection().removeAllRanges();
   });
+});
+
+function changeStylesheet(sheet) {
+  document.getElementById("stylesheet").setAttribute("href", sheet);
+}
+
+document.getElementById("theme-button").addEventListener("click", function () {
+  let currentStyle = document.getElementById("stylesheet");
+  let currentButtonText = document.getElementById("theme-button");
+
+  if (currentStyle.getAttribute("href") === "styles/default.css") {
+    currentStyle.setAttribute("href", "styles/dark.css");
+    currentButtonText.textContent = "Light Theme";
+    localStorage.setItem("theme", "dark");
+  } else {
+    currentStyle.setAttribute("href", "styles/default.css");
+    currentButtonText.textContent = "Dark Theme";
+    localStorage.setItem("theme", "light");
+  }
 });

@@ -1,0 +1,25 @@
+body {
+  background-color: #f5ffff;
+}
+
+#color-container {
+  border: 1px solid black;
+}
+
+.slider {
+  border: 1px solid black;
+}
+
+.copy-button {
+  background-color: darkgray;
+}
+
+.copy-button img {
+  background-color: darkgray;
+}
+
+#theme-button {
+  color: whitesmoke;
+  background-color: #14142e;
+  border-color: #000008;
+}

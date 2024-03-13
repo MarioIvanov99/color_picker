@@ -1,0 +1,40 @@
+body {
+  background-color: #000014;
+}
+
+.input-field {
+  color: whitesmoke;
+}
+
+#color-container {
+  border: 1px solid whitesmoke;
+}
+
+.slider {
+  border: 1px solid whitesmoke;
+}
+
+.color-field {
+  border-color: whitesmoke;
+  color: whitesmoke;
+  background-color: #000014;
+}
+
+#color-type {
+  border-color: whitesmoke;
+  color: whitesmoke;
+  background-color: #000014;
+}
+
+.copy-button {
+  background-color: lightgray;
+}
+
+.copy-button img {
+  background-color: lightgray;
+}
+
+#theme-button {
+  background-color: whitesmoke;
+  border-color: lightgray;
+}
