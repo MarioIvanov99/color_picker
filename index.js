@@ -7,6 +7,8 @@ const primaryColorInput = document.getElementById("primary-color");
 const copyButtons = document.querySelectorAll(".copy-button");
 let selectedValue = document.getElementById("color-type").value;
 
+//chrome.runtime.connect({ name: "popup" });
+
 function hslToHex(h, s, l) {
   l /= 100;
   const a = (s * Math.min(l, 1 - l)) / 100;
@@ -20,10 +22,37 @@ function hslToHex(h, s, l) {
   return `#${f(0)}${f(8)}${f(4)}`;
 }
 
+// Function to retrieve data from local storage
+function retrieveFromLocalStorage() {
+  // Retrieve the value associated with the key "primaryColor"
+  const primaryColor = localStorage.getItem("primary");
+  const selectedColor = localStorage.getItem("type");
+
+  // Check if the value exists
+  if (primaryColor !== null) {
+    primaryColorInput.value = primaryColor;
+    selectedValue = selectedColor;
+    setSliderValues(primaryColor);
+    updateColor(primaryColor);
+
+    // Set the value of the color-type element
+    document.getElementById("color-type").value = selectedValue;
+
+    // Trigger the change event manually
+    handleColorTypeChange.call(document.getElementById("color-type"));
+  } else {
+    updateSliderValues();
+  }
+}
+
+retrieveFromLocalStorage();
+
 function updateColor(color) {
   if (primaryColorInput.style.borderColor === "red") {
     primaryColorInput.style.borderColor = "";
   }
+
+  localStorage.setItem("primary", color);
 
   squareContainer.children[0].style.backgroundColor = color;
 
@@ -167,11 +196,12 @@ saturationSlider.addEventListener("input", updateSliderValues);
 lightnessSlider.addEventListener("input", updateSliderValues);
 
 // Initial color update
-updateSliderValues();
+//updateSliderValues();
 
 // Define the event listener function
 function handleColorTypeChange() {
   selectedValue = this.value;
+  localStorage.setItem("type", selectedValue);
   if (selectedValue === "complementary") {
     document.getElementById("secondary-color-2").style.visibility = "hidden";
     document.getElementById("secondary-color-3").style.visibility = "hidden";

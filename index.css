@@ -8,6 +8,8 @@ body {
   align-items: center;
   margin-top: 30px;
   gap: 63px;
+  width: 520px; /* Set the width of the popup */
+  height: 300px; /* Set the height of the popup */
 }
 
 .slider-container {
@@ -108,7 +110,7 @@ body {
 }
 
 #color-type {
-  margin-top: 8px;
+  margin-top: 6px;
   border-radius: 10px;
   font-family: "Josefin Sans", sans-serif;
   font-weight: 500;
