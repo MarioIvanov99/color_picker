@@ -148,16 +148,16 @@
 }
 
 .color-square {
-  width: 15px;
-  height: 15px;
+  width: 17px;
+  height: 17px;
   margin-right: -3px;
   margin-bottom: -3px;
   border: 3px solid #ccc;
 }
 
 .erase {
-  width: 27px;
-  height: 27px;
+  width: 31px;
+  height: 31px;
   border: 3px solid #ccc;
   padding: 0%;
 }
