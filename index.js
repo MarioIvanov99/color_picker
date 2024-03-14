@@ -29,7 +29,7 @@ function hslToHex(h, s, l) {
 // Function to convert RGB color to hexadecimal
 function rgbToHex(rgb) {
   // Separate the RGB values
-  var rgbArray = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  const rgbArray = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
   // Convert each component to hexadecimal and concatenate
   function hex(x) {
     return ("0" + parseInt(x).toString(16)).slice(-2);
@@ -42,16 +42,16 @@ function hexToHSL(hex) {
   hex = hex.replace(/^#/, "");
 
   // Convert hex to RGB
-  var r = parseInt(hex.substring(0, 2), 16) / 255;
-  var g = parseInt(hex.substring(2, 4), 16) / 255;
-  var b = parseInt(hex.substring(4, 6), 16) / 255;
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
 
   // Find min and max values of RGB
-  var max = Math.max(r, g, b);
-  var min = Math.min(r, g, b);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
 
   // Calculate lightness
-  var lightness = ((max + min) / 2) * 100;
+  const lightness = ((max + min) / 2) * 100;
 
   // If min and max are equal, the color is grayscale and saturation is 0
   if (max === min) {
@@ -59,12 +59,12 @@ function hexToHSL(hex) {
   }
 
   // Calculate saturation
-  var d = max - min;
-  var saturation =
+  const d = max - min;
+  const saturation =
     lightness > 50 ? (d / (2 - max - min)) * 100 : (d / (max + min)) * 100;
 
   // Calculate hue
-  var hue;
+  let hue;
   switch (max) {
     case r:
       hue = (((g - b) / d + (g < b ? 6 : 0)) / 6) * 360;
@@ -80,7 +80,7 @@ function hexToHSL(hex) {
   return { h: hue, s: saturation, l: lightness };
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
+//Load Data ///////////////////////////////////////////////////////////////////////
 
 // Function to retrieve data from local storage
 function retrieveFromLocalStorage() {
@@ -88,6 +88,8 @@ function retrieveFromLocalStorage() {
   const primaryColor = localStorage.getItem("primary");
   const selectedColor = localStorage.getItem("type");
   const theme = localStorage.getItem("theme");
+  const ind = localStorage.getItem("index");
+  const palette = JSON.parse(localStorage.getItem("palette"));
 
   // Check if the value exists
   if (primaryColor !== null) {
@@ -95,7 +97,6 @@ function retrieveFromLocalStorage() {
     selectedValue = selectedColor;
     setSliderValues(primaryColor);
     updateColor(primaryColor);
-
     // Set the value of the color-type element
     document.getElementById("color-type").value = selectedValue;
 
@@ -103,6 +104,9 @@ function retrieveFromLocalStorage() {
     handleColorTypeChange.call(document.getElementById("color-type"));
   } else {
     updateSliderValues();
+  }
+  if (ind !== null) {
+    paletteStartIndex = parseInt(ind);
   }
 
   let currentStyle = document.getElementById("stylesheet");
@@ -117,9 +121,33 @@ function retrieveFromLocalStorage() {
       currentButtonText.textContent = "Light Theme";
     }
   }
+
+  // Generate 20 color squares (adjust as needed)
+  generateColorSquares(16);
+
+  if (palette !== null) {
+    for (let i = 0; i < colorPalette.children.length; i++) {
+      colorPalette.children[i].style.backgroundColor = palette[i];
+    }
+  }
+}
+
+function getAllChildrenToArray() {
+  const childrenArray = [];
+
+  // Loop through each child of the parent element
+  for (let i = 0; i < colorPalette.children.length; i++) {
+    // Add the child to the array
+    childrenArray.push(colorPalette.children[i].style.backgroundColor);
+  }
+
+  // Return the array of children
+  return childrenArray;
 }
 
 retrieveFromLocalStorage();
+
+//Update Rendered Content ///////////////////////////////////////////////////////////////////////
 
 function updateColor(color) {
   if (primaryColorInput.style.borderColor === "red") {
@@ -316,7 +344,7 @@ function isValidHexColor(color) {
 
 // Function to add red border to the input field if the value is not a valid hex color code
 function validatePrimaryColor() {
-  var primaryColorValue = primaryColorInput.value;
+  const primaryColorValue = primaryColorInput.value;
 
   if (!isValidHexColor(primaryColorValue)) {
     primaryColorInput.style.borderColor = "red";
@@ -337,12 +365,12 @@ copyButtons.forEach(function (button) {
   // Add click event listener to each copy button
   button.addEventListener("click", function () {
     // Find the input field associated with this button
-    var inputId = this.parentElement.querySelector("input").id;
-    var inputElement = document.getElementById(inputId);
+    const inputId = this.parentElement.querySelector("input").id;
+    const inputElement = document.getElementById(inputId);
 
     // Select the text in the input field
     inputElement.select();
-    inputElement.setSelectionRange(0, 99999); // For mobile devices
+    inputElement.setSelectionRange(0, 99999);
 
     // Copy the selected text to the clipboard
     navigator.clipboard.writeText(inputElement.value);
@@ -381,9 +409,6 @@ function generateColorSquares(numSquares) {
   }
 }
 
-// Generate 20 color squares (adjust as needed)
-generateColorSquares(16);
-
 document.addEventListener("DOMContentLoaded", function () {
   // Disable the right-click menu
   document.addEventListener("contextmenu", function (event) {
@@ -414,17 +439,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Add click event listener to track left-click
   document.addEventListener("click", function (event) {
-    var clickedElement = event.target;
+    const clickedElement = event.target;
     // Check if the clicked element has the class "color-square"
     if (clickedElement && clickedElement.classList.contains("color-square")) {
       // Set the background color of the clicked element to the saved color
       clickedElement.style.backgroundColor = savedColor;
+      localStorage.setItem("palette", JSON.stringify(getAllChildrenToArray()));
     }
   });
 
   // Add click event listener to track left-click
   document.addEventListener("dblclick", function (event) {
-    var clickedElement = event.target;
+    const clickedElement = event.target;
     // Check if the clicked element has the class "child"
     if (clickedElement && clickedElement.classList.contains("child")) {
       savedColor = clickedElement.style.backgroundColor;
@@ -433,7 +459,8 @@ document.addEventListener("DOMContentLoaded", function () {
         savedColor;
 
       paletteStartIndex++;
-
+      localStorage.setItem("index", paletteStartIndex);
+      localStorage.setItem("palette", JSON.stringify(getAllChildrenToArray()));
       if (paletteStartIndex > 15) {
         paletteStartIndex = 0;
       }
@@ -442,7 +469,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.addEventListener("mousedown", function (event) {
     if (event.button === 1) {
-      var clickedElement = event.target;
+      const clickedElement = event.target;
       if (clickedElement && clickedElement.classList.contains("color-square")) {
         const backgroundColor = window
           .getComputedStyle(clickedElement)
@@ -461,4 +488,6 @@ clearButton.addEventListener("click", function () {
     colorPalette.children[i].style.backgroundColor = "#ffffff";
   }
   paletteStartIndex = 0;
+  localStorage.setItem("index", paletteStartIndex);
+  localStorage.setItem("palette", JSON.stringify(getAllChildrenToArray()));
 });
