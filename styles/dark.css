@@ -1,5 +1,5 @@
 body {
-  background-color: #000014;
+  background-color: #061738;
 }
 
 .input-field {
@@ -17,13 +17,13 @@ body {
 .color-field {
   border-color: whitesmoke;
   color: whitesmoke;
-  background-color: #000014;
+  background-color: #061738;
 }
 
 #color-type {
   border-color: whitesmoke;
   color: whitesmoke;
-  background-color: #000014;
+  background-color: #061738;
 }
 
 .copy-button {
@@ -36,5 +36,13 @@ body {
 
 #theme-button {
   background-color: whitesmoke;
+  border-color: lightgray;
+}
+
+.color-square {
+  border-color: lightgray;
+}
+
+.erase {
   border-color: lightgray;
 }

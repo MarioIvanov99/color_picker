@@ -6,8 +6,12 @@ const squareContainer = document.getElementById("color-container");
 const primaryColorInput = document.getElementById("primary-color");
 const copyButtons = document.querySelectorAll(".copy-button");
 let selectedValue = document.getElementById("color-type").value;
+const colorPalette = document.getElementById("colorPalette");
+const clearButton = document.getElementById("clear-button");
+let savedColor = "#ffffff";
+let paletteStartIndex = 0;
 
-//chrome.runtime.connect({ name: "popup" });
+//Color Utils ///////////////////////////////////////////////////////////////////////
 
 function hslToHex(h, s, l) {
   l /= 100;
@@ -21,6 +25,62 @@ function hslToHex(h, s, l) {
   };
   return `#${f(0)}${f(8)}${f(4)}`;
 }
+
+// Function to convert RGB color to hexadecimal
+function rgbToHex(rgb) {
+  // Separate the RGB values
+  var rgbArray = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  // Convert each component to hexadecimal and concatenate
+  function hex(x) {
+    return ("0" + parseInt(x).toString(16)).slice(-2);
+  }
+  return "#" + hex(rgbArray[1]) + hex(rgbArray[2]) + hex(rgbArray[3]);
+}
+
+function hexToHSL(hex) {
+  // Remove the leading "#" if present
+  hex = hex.replace(/^#/, "");
+
+  // Convert hex to RGB
+  var r = parseInt(hex.substring(0, 2), 16) / 255;
+  var g = parseInt(hex.substring(2, 4), 16) / 255;
+  var b = parseInt(hex.substring(4, 6), 16) / 255;
+
+  // Find min and max values of RGB
+  var max = Math.max(r, g, b);
+  var min = Math.min(r, g, b);
+
+  // Calculate lightness
+  var lightness = ((max + min) / 2) * 100;
+
+  // If min and max are equal, the color is grayscale and saturation is 0
+  if (max === min) {
+    return { h: 0, s: 0, l: lightness };
+  }
+
+  // Calculate saturation
+  var d = max - min;
+  var saturation =
+    lightness > 50 ? (d / (2 - max - min)) * 100 : (d / (max + min)) * 100;
+
+  // Calculate hue
+  var hue;
+  switch (max) {
+    case r:
+      hue = (((g - b) / d + (g < b ? 6 : 0)) / 6) * 360;
+      break;
+    case g:
+      hue = (((b - r) / d + 2) / 6) * 360;
+      break;
+    case b:
+      hue = (((r - g) / d + 4) / 6) * 360;
+      break;
+  }
+
+  return { h: hue, s: saturation, l: lightness };
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 // Function to retrieve data from local storage
 function retrieveFromLocalStorage() {
@@ -240,49 +300,6 @@ document
 // Manually trigger the event handler when the program runs initially
 handleColorTypeChange.call(document.getElementById("color-type"));
 
-function hexToHSL(hex) {
-  // Remove the leading "#" if present
-  hex = hex.replace(/^#/, "");
-
-  // Convert hex to RGB
-  var r = parseInt(hex.substring(0, 2), 16) / 255;
-  var g = parseInt(hex.substring(2, 4), 16) / 255;
-  var b = parseInt(hex.substring(4, 6), 16) / 255;
-
-  // Find min and max values of RGB
-  var max = Math.max(r, g, b);
-  var min = Math.min(r, g, b);
-
-  // Calculate lightness
-  var lightness = ((max + min) / 2) * 100;
-
-  // If min and max are equal, the color is grayscale and saturation is 0
-  if (max === min) {
-    return { h: 0, s: 0, l: lightness };
-  }
-
-  // Calculate saturation
-  var d = max - min;
-  var saturation =
-    lightness > 50 ? (d / (2 - max - min)) * 100 : (d / (max + min)) * 100;
-
-  // Calculate hue
-  var hue;
-  switch (max) {
-    case r:
-      hue = (((g - b) / d + (g < b ? 6 : 0)) / 6) * 360;
-      break;
-    case g:
-      hue = (((b - r) / d + 2) / 6) * 360;
-      break;
-    case b:
-      hue = (((r - g) / d + 4) / 6) * 360;
-      break;
-  }
-
-  return { h: hue, s: saturation, l: lightness };
-}
-
 function setSliderValues(color) {
   const hslColor = hexToHSL(color);
   hueSlider.value = hslColor.h;
@@ -352,4 +369,96 @@ document.getElementById("theme-button").addEventListener("click", function () {
     currentButtonText.textContent = "Dark Theme";
     localStorage.setItem("theme", "light");
   }
+});
+
+// Function to generate color squares
+function generateColorSquares(numSquares) {
+  for (let i = 0; i < numSquares; i++) {
+    let colorSquare = document.createElement("div");
+    colorSquare.className = "color-square";
+    colorSquare.style.backgroundColor = "#ffffff"; // You can replace this with your logic to get colors
+    colorPalette.appendChild(colorSquare);
+  }
+}
+
+// Generate 20 color squares (adjust as needed)
+generateColorSquares(16);
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Disable the right-click menu
+  document.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Add contextmenu event listener to track right-click
+  document.addEventListener("contextmenu", function (event) {
+    const clickedElement = event.target;
+    // Check if the clicked element has the class "color-square"
+    if (
+      (clickedElement && clickedElement.classList.contains("color-square")) ||
+      clickedElement.classList.contains("child")
+    ) {
+      const backgroundColor = window
+        .getComputedStyle(clickedElement)
+        .getPropertyValue("background-color");
+      const hexColor = rgbToHex(backgroundColor);
+
+      // Copy hexadecimal color code to clipboard
+      navigator.clipboard.writeText(hexColor).then(function () {
+        savedColor = hexColor;
+      });
+    }
+  });
+
+  // Add click event listener to track left-click
+  document.addEventListener("click", function (event) {
+    var clickedElement = event.target;
+    // Check if the clicked element has the class "color-square"
+    if (clickedElement && clickedElement.classList.contains("color-square")) {
+      // Set the background color of the clicked element to the saved color
+      clickedElement.style.backgroundColor = savedColor;
+    }
+  });
+
+  // Add click event listener to track left-click
+  document.addEventListener("dblclick", function (event) {
+    var clickedElement = event.target;
+    // Check if the clicked element has the class "child"
+    if (clickedElement && clickedElement.classList.contains("child")) {
+      savedColor = clickedElement.style.backgroundColor;
+
+      colorPalette.children[paletteStartIndex].style.backgroundColor =
+        savedColor;
+
+      paletteStartIndex++;
+
+      if (paletteStartIndex > 15) {
+        paletteStartIndex = 0;
+      }
+    }
+  });
+
+  document.addEventListener("mousedown", function (event) {
+    if (event.button === 1) {
+      var clickedElement = event.target;
+      if (clickedElement && clickedElement.classList.contains("color-square")) {
+        const backgroundColor = window
+          .getComputedStyle(clickedElement)
+          .getPropertyValue("background-color");
+        const hexColor = rgbToHex(backgroundColor);
+        primaryColorInput.value = hexColor;
+        setSliderValues(hexColor);
+        updateColor(hexColor);
+      }
+    }
+  });
+});
+
+clearButton.addEventListener("click", function () {
+  for (let i = 0; i < colorPalette.children.length; i++) {
+    colorPalette.children[i].style.backgroundColor = "#ffffff";
+  }
+  paletteStartIndex = 0;
 });

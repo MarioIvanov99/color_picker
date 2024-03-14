@@ -23,3 +23,11 @@ body {
   background-color: #14142e;
   border-color: #000008;
 }
+
+.color-square {
+  border-color: darkgray;
+}
+
+.erase {
+  border-color: darkgray;
+}
